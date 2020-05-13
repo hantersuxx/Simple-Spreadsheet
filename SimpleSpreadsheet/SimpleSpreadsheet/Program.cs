@@ -1,5 +1,7 @@
-﻿using SimpleSpreadsheet.Parser;
-using System;
+﻿using System;
+using SimpleSpreadsheet.Models;
+using SimpleSpreadsheet.Parser;
+using SimpleSpreadsheet.Printer;
 
 namespace SimpleSpreadsheet
 {
@@ -7,30 +9,27 @@ namespace SimpleSpreadsheet
   {
     static void Main(string[] args)
     {
-      Console.WriteLine("Hello World!");
-      var a = new A();
-      var b = new B();
-      A ba = new B();
-
-      Console.WriteLine(a is A);
-      Console.WriteLine(a is B);
-
-      Console.WriteLine(b is A);
-      Console.WriteLine(b is B);
-
-      Console.WriteLine(ba is A);
-      Console.WriteLine(ba is B);
-      Console.WriteLine(ba is C);
-
       ICommandLineArgumentsParser parser = new CommandLineArgumentsParser();
+      IPrinter printer = new Printer.Printer();
+      var spreadSheet = new SpreadSheet();
 
-      Console.WriteLine(parser.GetCommand(Console.ReadLine()));
+      while (true)
+      {
+        Console.Write("enter command: ");
+        var input = Console.ReadLine();
+        try
+        {
+          var parseResult = parser.Parse(input);
+          var command = parseResult.Command;
+          var validator = parseResult.Validator;
+          command.ExecuteCommand(spreadSheet, validator);
+          printer.Print(spreadSheet);
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine(ex.Message);
+        }
+      }
     }
   }
-
-  class A { }
-
-  class B : A { }
-
-  class C : A { }
 }

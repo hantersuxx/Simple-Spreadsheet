@@ -4,6 +4,6 @@ namespace SimpleSpreadsheet.Parser
 {
   public interface ICommandLineArgumentsParser
   {
-    Command GetCommand(string args);
+    ParseResult Parse(string args);
   }
 }
